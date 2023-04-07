@@ -1,5 +1,6 @@
 from src.constants import (
     ALLOWED_SERVER_IDS,
+
 )
 import logging
 
@@ -9,7 +10,7 @@ from discord import Message as DiscordMessage
 from typing import Optional, List
 import discord
 
-from src.constants import MAX_CHARS_PER_REPLY_MSG, INACTIVATE_THREAD_PREFIX
+from src.constants import MAX_CHARS_PER_REPLY_MSG, INACTIVATE_THREAD_PREFIX, MAX_COMMAND_BY_USER
 
 import datetime
 
@@ -17,9 +18,7 @@ import datetime
 commands_per_user = {}
 
 def can_send_command(user_id):
-    # Limite de commandes par utilisateur par semaine
-    limit = 1
-    
+
     # Obtenir la semaine actuelle (année, numéro de semaine)
     current_week = datetime.datetime.now().isocalendar()[:2]
     
@@ -32,7 +31,7 @@ def can_send_command(user_id):
     
     # Si l'utilisateur a des commandes enregistrées pour la semaine actuelle
     if user_info["week"] == current_week:
-        if user_info["count"] < limit:
+        if user_info["count"] < MAX_COMMAND_BY_USER:
             user_info["count"] += 1
             return True
         else:
