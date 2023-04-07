@@ -2,7 +2,7 @@ import discord
 from discord import Message as DiscordMessage
 import logging
 from src.base import Message, Conversation
-from utils import can_send_command
+from src.utils import can_send_command
 from src.constants import (
     BOT_INVITE_URL,
     DISCORD_BOT_TOKEN,
