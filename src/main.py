@@ -74,9 +74,14 @@ async def chat_command(int: discord.Interaction, message: str):
         user = int.user
         logger.info(f"Chat command by {user} {message[:20]}")
 
+        # Limit function
         if not can_send_command(user):
             
             logger.info(f"Chat command LIMIT {user} {message[:20]}")
+
+            await int.response.send_message(
+                f"Failed to start chat by limit {str(e)}", ephemeral=True
+            )
 
             return
 
