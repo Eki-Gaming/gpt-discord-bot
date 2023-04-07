@@ -11,6 +11,37 @@ import discord
 
 from src.constants import MAX_CHARS_PER_REPLY_MSG, INACTIVATE_THREAD_PREFIX
 
+import datetime
+
+# Dictionnaire pour stocker les commandes par utilisateur par semaine
+commands_per_user = {}
+
+def can_send_command(user_id):
+    # Limite de commandes par utilisateur par semaine
+    limit = 1
+    
+    # Obtenir la semaine actuelle (année, numéro de semaine)
+    current_week = datetime.datetime.now().isocalendar()[:2]
+    
+    # Vérifier si l'utilisateur a déjà des commandes enregistrées
+    if user_id not in commands_per_user:
+        commands_per_user[user_id] = {"week": current_week, "count": 1}
+        return True
+        
+    user_info = commands_per_user[user_id]
+    
+    # Si l'utilisateur a des commandes enregistrées pour la semaine actuelle
+    if user_info["week"] == current_week:
+        if user_info["count"] < limit:
+            user_info["count"] += 1
+            return True
+        else:
+            return False
+    else:
+        # Si les commandes enregistrées sont d'une semaine précédente, réinitialiser le compteur
+        commands_per_user[user_id] = {"week": current_week, "count": 1}
+        return True
+
 
 def discord_message_to_message(message: DiscordMessage) -> Optional[Message]:
     if (

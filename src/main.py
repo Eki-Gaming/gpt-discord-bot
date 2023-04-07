@@ -2,6 +2,7 @@ import discord
 from discord import Message as DiscordMessage
 import logging
 from src.base import Message, Conversation
+from utils import can_send_command
 from src.constants import (
     BOT_INVITE_URL,
     DISCORD_BOT_TOKEN,
@@ -72,6 +73,13 @@ async def chat_command(int: discord.Interaction, message: str):
 
         user = int.user
         logger.info(f"Chat command by {user} {message[:20]}")
+
+        if not can_send_command(user):
+            
+            logger.info(f"Chat command LIMIT {user} {message[:20]}")
+
+            return
+
         try:
             # moderate the message
             flagged_str, blocked_str = moderate_message(message=message, user=user)
